@@ -7,6 +7,7 @@ import urllib
 import urllib2
 
 import requests
+import struct
 
 
 class SnapchatAgent(object):
@@ -170,9 +171,10 @@ class SnapchatAgent(object):
             return None
 
         if endpoint == '/blob':
-            return result.text
+            return result.raw.data
 
         try:
             return result.json()
-        except Exception:
+        except Exception as e:
+            print e.message
             return None

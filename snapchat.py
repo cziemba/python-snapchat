@@ -1,6 +1,7 @@
 import time
 import json
 import random
+import struct
 
 from snapchat_agent import SnapchatAgent
 from snapchat_cache import SnapchatCache
@@ -90,10 +91,10 @@ class Snapchat(SnapchatAgent):
         timestamp = super(Snapchat, self).timestamp()
         result = super(Snapchat, self).post(
             '/logout',
-            {
-                'timestamp': str(timestamp),
-                'username': self.username
-            },
+            [
+                ('timestamp', str(timestamp)),
+                ('username', self.username)
+            ],
             [
                 self.auth_token,
                 str(timestamp)
@@ -219,6 +220,9 @@ class Snapchat(SnapchatAgent):
             ]
         )
 
+        if result is None:
+            return None
+
         if super(Snapchat, self).isMedia(result[:2]):
             return result
         else:
@@ -239,12 +243,12 @@ class Snapchat(SnapchatAgent):
         timestamp = super(Snapchat, self).timestamp()
         result = super(Snapchat, self).post(
             '/update_snaps',
-            {
-                'events': json.load(events),
-                'json': json.load(snap_info),
-                'timestamp': str(timestamp),
-                'username': self.username
-            },
+            [
+                ('events', json.load(events)),
+                ('json', json.load(snap_info)),
+                ('timestamp', str(timestamp)),
+                ('username', self.username)
+            ],
             [
                 self.auth_token,
                 str(timestamp)
@@ -312,10 +316,10 @@ class Snapchat(SnapchatAgent):
         timestamp = super(Snapchat, self).timestamp()
         result = super(Snapchat, self).post(
             '/clear',
-            {
-                'timestamp': str(timestamp),
-                'username': self.username
-            },
+            [
+                ('timestamp', str(timestamp)),
+                ('username', self.username)
+            ],
             [
                 self.auth_token,
                 str(timestamp)
