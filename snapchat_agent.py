@@ -164,7 +164,7 @@ class SnapchatAgent(object):
         if not multipart:
             data = urllib.urlencode(data)
 
-        result = requests.post(self.URL + endpoint, params=data, timeout=10, headers=self.HEADERS, verify=False)
+        result = requests.post(self.URL + endpoint, params=data, timeout=10, headers=self.HEADERS, verify=False, stream=True)
 
         if result.status_code != requests.codes.ok:
             print "ERROR: " + str(result.status_code)

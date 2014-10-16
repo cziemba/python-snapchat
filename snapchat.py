@@ -61,11 +61,6 @@ class Snapchat(SnapchatAgent):
                 ('password', password),
                 ('timestamp', str(timestamp))
             ],
-            #{
-            #    'username': username,
-            #    'password': password,
-            #    'timestamp': str(timestamp)
-            #},
             [
                 super(Snapchat, self).STATIC_TOKEN,
                 str(timestamp)
@@ -133,7 +128,6 @@ class Snapchat(SnapchatAgent):
             self.auth_token = result['updates_response']['auth_token']
             self.cache.set('updates', result['updates_response'])
             return result['updates_response']
-
         return result
 
     def getSnaps(self):
@@ -244,8 +238,8 @@ class Snapchat(SnapchatAgent):
         result = super(Snapchat, self).post(
             '/update_snaps',
             [
-                ('events', json.load(events)),
-                ('json', json.load(snap_info)),
+                ('events', json.dumps(events)),
+                ('json', json.dumps(snap_info)),
                 ('timestamp', str(timestamp)),
                 ('username', self.username)
             ],
