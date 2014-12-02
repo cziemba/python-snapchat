@@ -122,7 +122,7 @@ class SnapchatAgent(object):
 
         result = ''
         for i in range(len(self.HASH_PATTERN)):
-            if self.HASH_PATTERN[i] == '1':
+            if int(self.HASH_PATTERN[i]):
                 result += hash2[i]
             else:
                 result += hash1[i]
@@ -158,13 +158,30 @@ class SnapchatAgent(object):
         return urllib2.urlopen(self.URL + endpoint).read(self.MAX_FILE_SIZE)
 
     def post(self, endpoint, data, params, multipart=False):
+        """
+        Sends the post to the endpoint. URLEncodes data and params are passed.
+        :param endpoint: endpoint to post to
+        :param data: the data to encode and post
+        :param params: list containing an auth token and timestamp
+        :param multipart:
+        :return: resulting data or None on failure
+        """
         data.append(('req_token', self.hash(params[0], params[1])))
         data.append(('version', self.VERSION))
 
         if not multipart:
             data = urllib.urlencode(data)
 
-        result = requests.post(self.URL + endpoint, params=data, timeout=10, headers=self.HEADERS, verify=False, stream=True)
+        try:
+            result = requests.post(self.URL + endpoint,
+                                   params=data,
+                                   timeout=30,
+                                   headers=self.HEADERS,
+                                   verify=False,
+                                   stream=True)
+        except Exception as e:
+            print e.message
+            return None
 
         if result.status_code != requests.codes.ok:
             print "ERROR: " + str(result.status_code)

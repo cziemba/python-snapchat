@@ -1,10 +1,10 @@
 import time
 import json
 import random
-import struct
 
 from snapchat_agent import SnapchatAgent
 from snapchat_cache import SnapchatCache
+from pprint import pprint
 
 
 class Snapchat(SnapchatAgent):
@@ -48,8 +48,7 @@ class Snapchat(SnapchatAgent):
 
     def _empty(self, dictionary, key):
         if key in dictionary:
-            if dictionary[key]:
-                return False
+            return False
         return True
 
     def login(self, username, password):
@@ -140,7 +139,7 @@ class Snapchat(SnapchatAgent):
         for snap in updates['snaps']:
             snaps.append({
                 'id': snap['id'],
-                'media_id': None if self._empty(snap, 'c_id') else snap['c_id'],
+                'media_id': None if self._empty(snap, 'm') else snap['m'],
                 'time': None if self._empty(snap, 't') else snap['t'],
                 'sender': None if self._empty(snap, 'sn') else snap['sn'],
                 'recipient': None if self._empty(snap, 'rp') else snap['rp'],
@@ -155,6 +154,10 @@ class Snapchat(SnapchatAgent):
                 }
             })
         return snaps
+
+    def getImages(self):
+        images = [s for s in self.getSnaps() if s['media_id'] == self.MEDIA_IMAGE]
+        return images
 
     def getFriendStories(self, force=False):
         #TODO: Implement
@@ -217,9 +220,9 @@ class Snapchat(SnapchatAgent):
         if result is None:
             return None
 
-        if super(Snapchat, self).isMedia(result[:2]):
+        if super(Snapchat, self).isMedia(result[:2]):  # not encrypted
             return result
-        else:
+        else:  # must decrypt
             result = super(Snapchat, self).decryptECB(result)
 
             if super(Snapchat, self).isMedia(result[:2]):
@@ -230,7 +233,7 @@ class Snapchat(SnapchatAgent):
                 return result
         return None
 
-    def sendEvents(self, events, snap_info = None):
+    def sendEvents(self, events, snap_info=None):
         if self.auth_token is None or self.username is None:
             return False
 
@@ -304,6 +307,10 @@ class Snapchat(SnapchatAgent):
         return
 
     def clearFeed(self):
+        """
+        Sends clear feed. Returns False on failure.
+        :return: bool
+        """
         if self.auth_token is None or self.username is None:
             return False
 
