@@ -28,4 +28,4 @@ TODO
 
 LICENSE
 -------
-MIT
+<a href="http://cziemba.mit-license.org">MIT</a>
