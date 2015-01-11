@@ -34,9 +34,9 @@ class SnapchatAgent(object):
     MAX_FILE_SIZE = 20000
 
     HEADERS = {
-        'User-Agent': 'Snapchat/4.1.07 (Nexus 4; Android 18; gzip)',
-        'Content-Type': 'application/json',
-        'Accept-Charset': 'UTF-8'
+        'User-Agent': 'Snapchat/8.1.1 (iPhone5,1; iOS 6.1.4; gzip)',
+        'Accept-Language': 'en-US;q=1, en;q=0.9',
+        'Accept-Locale': 'en',
     }
 
     CURL_OPTIONS = [

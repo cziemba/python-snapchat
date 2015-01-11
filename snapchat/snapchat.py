@@ -40,11 +40,12 @@ class Snapchat(SnapchatAgent):
         self.username = None
 
         if password is not None:
-            self.login(username, password)
+            if self.login(username, password) is False:
+                raise Exception("Login Failure")
         elif auth_token is not None:
             self.auth_token = auth_token
-            self.cache = SnapchatCache()
             self.username = username
+            self.cache = SnapchatCache()
 
     def _empty(self, dictionary, key):
         if key in dictionary:
@@ -74,7 +75,7 @@ class Snapchat(SnapchatAgent):
             self.username = result['username']
             self.cache = SnapchatCache()
             self.cache.set('updates', result)
-            return result
+            return True
         else:
             return False
 
